@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>輔大醫院急診 RRC 訪查備詢教戰手冊</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --panel:#ffffff; --ink:#1c2b3a; --muted:#5b6b7d;
+    --line:#e2e8f0; --brand:#0d5c8f; --brand-d:#08324f; --brand-l:#e8f2f9;
+    --res:#1d7a5f; --res-l:#e6f4ef; --att:#8a5a11; --att-l:#faf1e2;
+    --q:#2563a8; --a:#1d7a5f; --key:#0d7a6f; --ng:#b3341f;
+    --key-bg:#e7f6f2; --ng-bg:#fbecea; --q-bg:#eef4fb; --a-bg:#edf7f2;
+    --shadow:0 1px 3px rgba(20,40,60,.08),0 6px 24px rgba(20,40,60,.06);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+  a{color:var(--brand);text-decoration:none}
+
+  /* Layout */
+  .wrap{display:flex;min-height:100vh}
+  aside{width:288px;flex:0 0 288px;background:var(--panel);border-right:1px solid var(--line);
+    position:sticky;top:0;height:100vh;overflow-y:auto;padding:0}
+  main{flex:1;min-width:0;padding:0 0 80px}
+
+  /* Sidebar */
+  .brand{padding:20px 20px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:5}
+  .brand h1{font-size:17px;margin:0 0 3px;letter-spacing:.5px}
+  .brand .sub{font-size:12px;color:var(--muted)}
+  .searchbox{padding:12px 16px;position:sticky;top:73px;background:var(--panel);z-index:5;border-bottom:1px solid var(--line)}
+  #search{width:100%;padding:10px 12px 10px 34px;border:1px solid var(--line);border-radius:9px;font-size:14px;
+    background:var(--bg) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235b6b7d' stroke-width='2'><circle cx='11' cy='11' r='7'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>") no-repeat 10px center;outline:none}
+  #search:focus{border-color:var(--brand);background-color:#fff}
+  .searchhint{font-size:11px;color:var(--muted);margin-top:6px}
+  nav{padding:10px 10px 30px}
+  nav .grp{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;
+    padding:14px 12px 6px;display:flex;align-items:center;gap:6px}
+  nav a{display:block;padding:8px 12px;border-radius:8px;color:var(--ink);font-size:14px;margin:1px 0;
+    border-left:3px solid transparent;transition:.12s}
+  nav a:hover{background:var(--brand-l)}
+  nav a.active{background:var(--brand-l);border-left-color:var(--brand);font-weight:600;color:var(--brand-d)}
+  nav a .tag{font-size:11px;color:var(--muted);font-weight:400}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .dot.r{background:var(--res)} .dot.a{background:var(--att)} .dot.c{background:var(--brand)}
+
+  /* Topbar */
+  .topbar{position:sticky;top:0;z-index:4;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);padding:12px 34px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .tabs{display:flex;gap:6px}
+  .tab{padding:7px 15px;border-radius:20px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:13.5px;
+    color:var(--muted);font-weight:600;transition:.12s}
+  .tab:hover{border-color:var(--brand)}
+  .tab.on{color:#fff;border-color:transparent}
+  .tab.on[data-role="all"]{background:var(--brand)}
+  .tab.on[data-role="res"]{background:var(--res)}
+  .tab.on[data-role="att"]{background:var(--att)}
+  .btn{margin-left:auto;padding:7px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;
+    font-size:13px;color:var(--ink)}
+  .btn:hover{background:var(--bg)}
+
+  /* Content */
+  .content{padding:30px 34px 0;max-width:1000px}
+  section{margin-bottom:38px;scroll-margin-top:80px}
+  .sec-head{display:flex;align-items:center;gap:12px;margin:0 0 4px}
+  .sec-head .code{font-size:13px;font-weight:800;padding:4px 10px;border-radius:7px;letter-spacing:.5px;white-space:nowrap}
+  .code.res{background:var(--res-l);color:var(--res)} .code.att{background:var(--att-l);color:var(--att)}
+  .code.c{background:var(--brand-l);color:var(--brand-d)}
+  h2{font-size:22px;margin:0}
+  .sec-sub{color:var(--muted);font-size:14px;margin:2px 0 16px}
+  .pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:20px;background:var(--brand-l);color:var(--brand-d);
+    font-weight:600;margin-left:4px}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+    padding:22px 24px;margin-bottom:18px}
+  .card h3{margin:0 0 14px;font-size:17px;display:flex;align-items:center;gap:9px}
+  .card h3 .n{background:var(--brand);color:#fff;width:24px;height:24px;border-radius:7px;display:inline-flex;
+    align-items:center;justify-content:center;font-size:13px;flex:0 0 24px}
+
+  .blk{border-radius:10px;padding:13px 16px;margin:10px 0}
+  .blk .lab{font-weight:800;font-size:12.5px;letter-spacing:.5px;display:flex;align-items:center;gap:7px;margin-bottom:7px;text-transform:uppercase}
+  .blk.q{background:var(--q-bg)} .blk.q .lab{color:var(--q)}
+  .blk.a{background:var(--a-bg);border-left:4px solid var(--a)} .blk.a .lab{color:var(--a)}
+  .blk.key{background:var(--key-bg)} .blk.key .lab{color:var(--key)}
+  .blk.ng{background:var(--ng-bg)} .blk.ng .lab{color:var(--ng)}
+  .blk ul{margin:4px 0 0;padding-left:20px} .blk li{margin:5px 0}
+  .blk p{margin:6px 0}
+  .quote{background:#fff;border:1px dashed var(--a);border-radius:8px;padding:10px 14px;margin:8px 0;
+    font-size:15px;color:#12432f}
+  .quote b{color:var(--a)}
+  .kw{display:inline-block;background:#fff;border:1px solid var(--key);color:var(--key);border-radius:20px;
+    padding:2px 11px;font-size:13px;margin:3px 4px 3px 0;font-weight:600}
+
+  .grade5{background:var(--brand-d);color:#fff;border-radius:8px;padding:9px 14px;font-size:13px;margin-bottom:14px}
+  .grade5 b{color:#ffd77a}
+
+  table{border-collapse:collapse;width:100%;font-size:14px;margin:6px 0}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:var(--brand-l);color:var(--brand-d);font-weight:700}
+  tr:nth-child(even) td{background:#fafcfe}
+
+  .callout{border-radius:12px;padding:16px 20px;margin:14px 0;border:1px solid var(--line);background:#fff}
+  .callout.warn{background:#fff8ec;border-color:#f0d9a8}
+  .callout.info{background:var(--brand-l);border-color:#c7e0f0}
+  .callout h4{margin:0 0 8px;font-size:15px}
+
+  .people{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:8px 0}
+  .person{background:#fff;border:1px solid var(--line);border-radius:11px;padding:14px 16px}
+  .person .role{font-size:12px;color:var(--muted)} .person .nm{font-size:17px;font-weight:700;margin:2px 0}
+  .person .fn{font-size:12.5px;color:var(--brand-d)}
+
+  .num{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:10px 0}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:11px;padding:13px 15px;text-align:center}
+  .stat .v{font-size:24px;font-weight:800;color:var(--brand)} .stat .l{font-size:12px;color:var(--muted);margin-top:2px}
+
+  .noresult{display:none;text-align:center;color:var(--muted);padding:60px 20px;font-size:15px}
+  mark{background:#ffe88a;color:inherit;padding:0 1px;border-radius:3px}
+
+  .hidden{display:none!important}
+
+  @media(max-width:860px){
+    aside{display:none} .content,.topbar{padding-left:18px;padding-right:18px}
+    .mobnav{display:block}
+  }
+  @media print{
+    aside,.topbar,.btn{display:none} main{padding:0}
+    .card{break-inside:avoid;box-shadow:none} body{background:#fff}
+  }
+  /* footer */
+  footer{max-width:1000px;margin:20px 34px 0;padding:20px 0;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside>
+    <div class="brand">
+      <h1>急診 RRC 訪查<br>備詢教戰手冊</h1>
+      <div class="sub">天主教輔仁大學附設醫院 · 急診醫學部<br>2026（115）年學會訪查</div>
+    </div>
+    <div class="searchbox">
+      <input id="search" type="text" placeholder="搜尋條文、關鍵字、答法…" autocomplete="off">
+      <div class="searchhint">例：休假、床邊評量、EPA、反應管道、范修平</div>
+    </div>
+    <nav id="nav"></nav>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <div class="tabs">
+        <div class="tab on" data-role="all">全部</div>
+        <div class="tab" data-role="res"><span class="dot r"></span>&nbsp;住院醫師</div>
+        <div class="tab" data-role="att"><span class="dot a"></span>&nbsp;主治醫師</div>
+      </div>
+      <button class="btn" onclick="window.print()">🖨 列印 / 存 PDF</button>
+    </div>
+    <div class="content" id="content">
+
+<!-- ===================== 總覽 ===================== -->
+<section id="overview" data-role="all" data-group="開始" data-title="總覽與備詢黃金守則">
+  <div class="sec-head"><span class="code c">總覽</span><h2>備詢黃金守則</h2></div>
+  <div class="sec-sub">訪查委員會將抽點<b>急診主治醫師（教師／導師）</b>與<b>住院醫師</b>面談，比對紙本紀錄與口頭回答是否一致。本手冊逐條給你「委員會怎麼問 → 標準答法 → 加分關鍵字 → 地雷」。</div>
+
+  <div class="callout info">
+    <h4>🎯 委員會這次會面談誰、問什麼（依工作分配表）</h4>
+    <table>
+      <tr><th>對象</th><th>條文</th><th>面談主題</th><th>抽點方式</th></tr>
+      <tr><td rowspan="4"><span class="dot r"></span> 住院醫師</td><td>4.1</td><td>工作手冊與評核教育</td><td rowspan="4">住院醫師總人數 <b>30%</b> 備詢（現有 R2–R4，四捨五入至少 1 位）</td></tr>
+      <tr><td>4.2a</td><td>休假制度</td></tr>
+      <tr><td>4.3</td><td>看病流程</td></tr>
+      <tr><td>4.4</td><td>反應（申訴）管道</td></tr>
+      <tr><td rowspan="2"><span class="dot a"></span> 主治醫師</td><td>4.3</td><td>看病流程、床邊評量（EPA／里程碑 milestone）</td><td>教師備詢</td></tr>
+      <tr><td>5.2.2.1</td><td>訓練計畫內容</td><td>2 位教師 + 1 位導師訪談</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3><span class="n">1</span>回答的五個原則</h3>
+    <div class="blk a">
+      <div class="lab">✔ 這樣答會加分</div>
+      <ul>
+        <li><b>說得出、找得到、對得上：</b>凡是講「我們有…」，就要能指出寫在<b>工作手冊／訓練計畫</b>第幾章、或哪一份<b>紀錄表</b>；口頭答案要和紙本一致。</li>
+        <li><b>先給結論，再給例子：</b>先講制度（有、定期、留紀錄），再舉一個自己實際經歷的例子。</li>
+        <li><b>對到「等級五」用語：</b>關鍵字是「<b>有書面規範</b>、<b>定期</b>、<b>落實執行且留有紀錄</b>、<b>全部內容都知道</b>」。</li>
+        <li><b>團隊口徑一致：</b>主持人、導師、教師、住院醫師講的制度要一致（人物、數字、流程相同）。</li>
+        <li><b>誠實、簡潔、自信：</b>微笑、看著委員、講重點；不確定就說「這部分由○○負責，我可以請他補充」，不要臨場亂編。</li>
+      </ul>
+    </div>
+    <div class="blk ng">
+      <div class="lab">✘ 千萬別這樣答</div>
+      <ul>
+        <li>「<b>好像有</b>／<b>應該有吧</b>／<b>我不太清楚</b>」— 等於沒有，直接掉等級。</li>
+        <li>只會背條文卻舉不出自己的例子；或人數、班數、流程講得跟工作手冊不一樣。</li>
+        <li>抱怨制度、批評師長或同事；或誇大成「我們絕對都有做到 100%」卻拿不出紀錄。</li>
+        <li>回答到「去別家合作／偏遠醫院輪訓的時數也算」等錯誤概念（那些<b>不列入</b>急診工時計算）。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="n">2</span>關鍵人物（一定要叫得出名字與角色）</h3>
+    <div class="people">
+      <div class="person"><div class="role">訓練計畫主持人 / RRC 教育訓練主持人</div><div class="nm">范修平 醫師</div><div class="fn">急診醫學＋小兒（兒童急診）雙專科；院方醫學教育委員會委員</div></div>
+      <div class="person"><div class="role">急診醫學部 部長 / 主任</div><div class="nm">王宗倫 醫師</div><div class="fn">部門最高主管（依規定不得兼任計畫主持人）</div></div>
+      <div class="person"><div class="role">住院醫師（受訓中）</div><div class="nm">R3 乃暐璇 · R3 王中鈺 · R2 林昆霖</div><div class="fn">面談對象；每人都要熟本手冊 4.1／4.2a／4.3／4.4</div></div>
+    </div>
+    <p style="font-size:13.5px;color:var(--muted)">申訴逐級：導師／臨床教師 → 計畫主持人（范修平）→ 部長（王宗倫）→ 教學部；另有院牧部員工關懷小組、人資室員工申訴與員工信箱。</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="n">3</span>關鍵數字速查（背起來）</h3>
+    <div class="num">
+      <div class="stat"><div class="v">12 小時</div><div class="l">每班時數</div></div>
+      <div class="stat"><div class="v">16 班</div><div class="l">原則每月班數（部務會議月 15 班）</div></div>
+      <div class="stat"><div class="v">160–200 h</div><div class="l">每月臨床工時</div></div>
+      <div class="stat"><div class="v">1/3</div><div class="l">假日上班時數上限</div></div>
+      <div class="stat"><div class="v">1/4</div><div class="l">夜班數下限（≤白班總數）</div></div>
+      <div class="stat"><div class="v">每月 5 日</div><div class="l">23:59 前交下月排班休假需求</div></div>
+      <div class="stat"><div class="v">6 大</div><div class="l">核心能力</div></div>
+      <div class="stat"><div class="v">R1→18人</div><div class="l">R1/R2/R3/R4 每 12h 接新病人 12/14/16/18</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================== 住院醫師篇 ===================== -->
+<section id="res-intro" data-role="res" data-group="住院醫師篇" data-title="住院醫師篇：面談重點">
+  <div class="sec-head"><span class="code res">住院醫師篇</span><h2>你會被問到的四條</h2></div>
+  <div class="sec-sub">委員會將抽<b>住院醫師總人數 30%</b>面談。以下 4.1、4.2a、4.3、4.4 每一條的「標準答法」都要能用自己的話講出來，並舉一個親身例子。</div>
+  <div class="grade5">💡 全部答到 <b>等級五</b> 的共同關鍵：<b>有工作手冊/書面規範 → 定期做且留紀錄 → 我全部內容都知道，而且我自己就是這樣做的。</b></div>
+</section>
+
+<section id="res-41" data-role="res" data-group="住院醫師篇" data-title="4.1 工作手冊與評核教育">
+  <div class="sec-head"><span class="code res">住 4.1</span><h2>接受督導：工作手冊與評核教育</h2><span class="pill">等級五</span></div>
+  <div class="sec-sub">委員要確認：你知道有工作手冊、知道自己的權利義務、知道要接受哪些評核。</div>
+  <div class="card">
+    <div class="grade5">等級五標準：<b>有學習須知／工作手冊並落實執行留有紀錄；住院醫師瞭解全部內容。</b></div>
+    <div class="blk q"><div class="lab">🅠 委員可能這樣問</div>
+      <ul>
+        <li>你們科有工作手冊（學習須知）嗎？裡面寫了什麼？</li>
+        <li>你到職第一天有沒有職前訓練？誰帶你？</li>
+        <li>你在三年半（或四年）訓練中要接受哪些評核？多久一次？</li>
+        <li>你怎麼知道自己的權利與義務？</li>
+      </ul>
+    </div>
+    <div class="blk a"><div class="lab">🅐 標準答法</div>
+      <div class="quote">「本部編有《<b>急診醫學部工作手冊</b>》，最新是 <b>114.05.23 第五次修訂</b>，會依訓練計畫與最新實證<b>定期檢討更新</b>。內容明訂<b>學習須知、工作規範、我有義務記錄自己的學習歷程、以及各項評核方式</b>，還包括急診看診四大重點、急診十誡、病歷書寫、急救、災難醫學、轉診法規等學習重點。」</div>
+      <div class="quote">「我<b>到職第一天</b>就接受<b>職前訓練</b>（由總醫師／導師／教學負責人帶，主持人主持環境介紹），內容含工作環境、電腦系統、醫療處置常規、急救器材、<b>病人安全與意見反應管道</b>，並領到工作手冊、班表、教育訓練課程表、評核表；<b>職前訓練有我的簽名紀錄</b>。」</div>
+      <div class="quote">「評核依<b>六大核心能力</b>設計、多元且定期：床邊有<b>急診里程碑（每班 2 份）</b>與<b>EPA 可信賴專業活動（每班 2 份）</b>；每月有 <b>Mini-CEX、DOPS、病歷書寫評核、Portfolio 學習歷程</b>；<b>每月最後一週導師口試</b>（ACLS/ATLS/EMS、當月教學會議、核心課程）；<b>每半年一次六大核心能力綜合考評</b>；<b>每年晉升筆試＋口試（技術考）</b>。這些內容都寫在工作手冊，我全部都知道。」</div>
+    </div>
+    <div class="blk key"><div class="lab">🔑 一定要講到的關鍵字</div>
+      <span class="kw">工作手冊 114.05.23 第五版</span><span class="kw">定期檢討更新</span><span class="kw">職前訓練＋簽名</span><span class="kw">記錄自己學習歷程的義務</span><span class="kw">六大核心能力</span><span class="kw">里程碑/EPA</span><span class="kw">Mini-CEX/DOPS</span><span class="kw">每半年綜合考評</span><span class="kw">年度晉升考核</span>
+    </div>
+    <div class="blk ng"><div class="lab">⚠ 地雷</div>
+      <ul><li>答不出手冊裡有什麼、或說「沒看過」。</li><li>把評核講得零散、講不出頻率（委員最愛追問「多久一次」）。</li><li>忘記提「我有義務自己記錄學習歷程（Portfolio／學習護照）」— 這是 5.1.2 的評分點。</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="res-42a" data-role="res" data-group="住院醫師篇" data-title="4.2a 休假制度（值班時間）">
+  <div class="sec-head"><span class="code res">住 4.2a</span><h2>值班時間：休假制度</h2><span class="pill">等級五</span></div>
+  <div class="sec-sub">這題是委員<b>必問</b>：「你知道休假制度嗎？」要能講出班數、工時、年休怎麼折抵。</div>
+  <div class="card">
+    <div class="grade5">等級五標準：急診輪訓月<b>平均每月臨床工時 160–200 小時、每班不超過 12 小時</b>，白夜班分配得宜，<b>假日上班時數不超過當月所有假日時數的 1/3</b>；<b>住院醫師有年休制度</b>；看診量合宜。</div>
+    <div class="blk q"><div class="lab">🅠 委員可能這樣問</div>
+      <ul>
+        <li>你知道你們的排班休假規定嗎？每月排幾班、每班幾小時？</li>
+        <li>你有沒有年休？請年休班數怎麼算、會不會被扣？</li>
+        <li>白班夜班怎麼分？假日上班有沒有上限？</li>
+        <li>要請假、要交排班需求，流程是什麼？</li>
+      </ul>
+    </div>
+    <div class="blk a"><div class="lab">🅐 標準答法</div>
+      <div class="quote">「本部有《<b>住院醫師排班休假規定</b>》（最新 114.05.19 第五版）。急診上班<b>每班 12 小時</b>，原則<b>每月 16 班</b>；有部務會議的月份排 <b>15 班</b>（第 2、4 週週二要回急診開部務會議，前一天和當天不排夜班，因為勞基法不能連續超過 12 小時）。平均<b>每月臨床工時落在 160–200 小時</b>。」</div>
+      <div class="quote">「<b>白班</b>定義是上下班都在同一天，跨日就算<b>夜班</b>。白夜班盡量平均，<b>每年度（8 月到隔年 7 月）夜班總數不得大於白班、也不得少於總班數的 1/4</b>；<b>假日上班時數不超過當月（及當年）所有假日時數的 1/3</b>。」</div>
+      <div class="quote">「住院醫師<b>有年休制度</b>。請年休會<b>按比例折抵班數</b>：例如三月請年休 5 天，工時 192×26/31≈161 小時≈13 班，就<b>減 3 班、當月排 13 班</b>；請 1 天年休是特例，那 0.5 班（6 小時）由 RRC 教育訓練主持人排。年假不影響排班為原則，看診量也合宜。」</div>
+      <div class="quote">「排班需求要在<b>每月 5 日 23:59 前</b>交給教學助理，逾期視同無需求；每人每月最多約假 8 天（6 平日 2 假日，年假另計）。臨時或緊急請假要報告當班主治或總醫師，並向部主任與 RRC 主持人報備。」</div>
+    </div>
+    <div class="callout warn">
+      <h4>📊 年休折抵班數對照（背關鍵幾格即可）</h4>
+      <table>
+        <tr><th>年休天數</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td></tr>
+        <tr><th>減班數</th><td>0.5</td><td>1</td><td>2</td><td>2</td><td>3</td><td>3</td><td>4</td><td>4</td></tr>
+        <tr><th>當月值班數</th><td>15.5</td><td>15</td><td>14</td><td>14</td><td>13</td><td>13</td><td>12</td><td>12</td></tr>
+      </table>
+    </div>
+    <div class="blk key"><div class="lab">🔑 關鍵字</div>
+      <span class="kw">每班12小時</span><span class="kw">每月16班/會議月15班</span><span class="kw">160–200小時</span><span class="kw">夜班≤白班且≥總數1/4</span><span class="kw">假日≤1/3</span><span class="kw">有年休、按比例折抵</span><span class="kw">每月5日交需求</span>
+    </div>
+    <div class="blk ng"><div class="lab">⚠ 地雷</div>
+      <ul>
+        <li>說「沒有年休」或「請年休會被扣班／不敢請」— 直接不及格。</li>
+        <li>把去<b>合作醫院、偏遠地區急診輪訓</b>的時數算進來（那些<b>不列入</b>本院急診工時計算）。</li>
+        <li>工時講超過 200 小時、或每班超過 12 小時（違反主管機關規定）。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="res-43" data-role="res" data-group="住院醫師篇" data-title="4.3 看病流程（責任分層）">
+  <div class="sec-head"><span class="code res">住 4.3</span><h2>責任分層及漸進：看病流程</h2><span class="pill">等級五</span></div>
+  <div class="sec-sub">委員要確認：不同年資能做的處置有規範、你知道自己的權限、重大決定要主治核簽。</div>
+  <div class="card">
+    <div class="grade5">等級五標準：有規範不同層級可做的臨床處置、有<b>床邊評量</b>並依結果<b>信賴等級授權</b>；<b>每位資淺住院醫師的病歷都經主治審核</b>；有訓練資深住院醫師教學與領導能力。</div>
+    <div class="blk q"><div class="lab">🅠 委員可能這樣問</div>
+      <ul>
+        <li>你現在是 R 幾？你能獨立看哪些病人、哪些一定要找主治？</li>
+        <li>你接到一個新病人，看診流程是什麼？</li>
+        <li>安排 CT、要住院／留觀／會診，需要誰同意？</li>
+        <li>你的病歷有沒有主治醫師核簽？</li>
+      </ul>
+    </div>
+    <div class="blk a"><div class="lab">🅐 標準答法（先講流程，再講自己的層級）</div>
+      <div class="quote"><b>看病流程（三階段）：</b>「先<b>穩定生命徵象、找出並立即處理危及生命的問題</b>，再根據主訴＋檢傷生命徵象做<b>重點病史與理學檢查</b>建立臆斷，安排適當檢驗檢查與初步處置得到<b>診斷</b>，最後決定<b>動向</b>——住院／留觀／出院追蹤／轉院。就是『<b>臆斷 → 治療 → 動向</b>』。」</div>
+      <div class="quote"><b>核簽規範（不論層級都要）：</b>「要安排<b>昂貴檢查（內視鏡／CT／MRI）、侵入性處置、或動向處置（住出院／留觀／會診）</b>，<b>不論我是哪一級，都要向主治醫師報告並核簽</b>。」</div>
+      <div class="quote"><b>我的層級權限（舉自己）：</b>
+        「R1／R2 <b>優先看輕症（檢傷 3–5 級）</b>，重症（1–2 級）先跟診協助或看了要<b>立即向主治報告討論</b>；<b>各級病人都不能獨立診治，病歷與醫囑都要主治複簽，醫囑沒複簽護理不會執行</b>。<br>
+        R3／R4 可<b>優先看重症</b>、可獨立診治（護理可先執行醫囑），但<b>主治仍會再診察並全部核章、動向決定仍要主治核簽</b>；R3/R4 還要<b>指導 R1/R2、PGY、實習醫學生</b>。」</div>
+      <div class="quote"><b>床邊評量：</b>「主治會用<b>急診里程碑（milestone）</b>和 <b>EPA 可信賴專業活動</b>對我做<b>床邊評量</b>，依表現做<b>等級判定或信賴授權</b>，每班各 2 份。」</div>
+    </div>
+    <div class="callout info">
+      <h4>🩺 各年資看病權限一覽（能對應到自己就好）</h4>
+      <table>
+        <tr><th>年資</th><th>看診</th><th>權限 / 核簽</th><th>每 12h 目標新病人</th></tr>
+        <tr><td>R1</td><td>輕症(3–5級)為主，重症跟診協助</td><td>不可獨立，病歷+醫囑皆需主治複簽</td><td>12 人</td></tr>
+        <tr><td>R2</td><td>優先輕症，開始學重症（需即報告）</td><td>不可獨立，病歷+醫囑皆需主治複簽</td><td>14 人</td></tr>
+        <tr><td>R3</td><td>優先重症，輕症續累積</td><td>可獨立診治，主治全部核章、動向需核簽</td><td>16 人</td></tr>
+        <tr><td>R4</td><td>優先重症；並指導學弟妹</td><td>同 R3，並帶教學與領導</td><td>18 人</td></tr>
+      </table>
+    </div>
+    <div class="blk key"><div class="lab">🔑 關鍵字</div>
+      <span class="kw">臆斷→治療→動向</span><span class="kw">ABC先穩定生命徵象</span><span class="kw">CT/侵入性/動向一律核簽</span><span class="kw">資淺病歷全部主治審核</span><span class="kw">里程碑 milestone</span><span class="kw">EPA 信賴授權</span><span class="kw">分層漸進</span>
+    </div>
+    <div class="blk ng"><div class="lab">⚠ 地雷</div>
+      <ul><li>說「我 R1 就自己決定住院／自己開 CT 不用問」— 違反核簽規範。</li><li>講不出自己這一級能做什麼、不能做什麼。</li><li>否認病歷有主治核簽。</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="res-44" data-role="res" data-group="住院醫師篇" data-title="4.4 反應（申訴）管道">
+  <div class="sec-head"><span class="code res">住 4.4</span><h2>公平處理抱怨及申訴：反應管道</h2><span class="pill">等級五</span></div>
+  <div class="sec-sub">委員要確認：反應管道<b>多樣化</b>、你<b>全部都知道</b>、而且有定期座談會與導師生會談的紀錄。</div>
+  <div class="card">
+    <div class="grade5">等級五標準：有<b>書面規範</b>的意見反應管道、<b>管道多樣化</b>、<b>定期舉行住院醫師座談會</b>認真處理、受評住院醫師<b>知道全部內容</b>，並有<b>導師生會談紀錄</b>佐證輔導與意見處理。</div>
+    <div class="blk q"><div class="lab">🅠 委員可能這樣問</div>
+      <ul>
+        <li>如果你有抱怨、遇到困難或不公平，你可以循哪些管道反映？</li>
+        <li>有沒有定期的座談會或導師會談？多久一次？</li>
+        <li>如果你不想透過導師講，還有別的管道嗎？</li>
+      </ul>
+    </div>
+    <div class="blk a"><div class="lab">🅐 標準答法（把「多樣化」講滿）</div>
+      <div class="quote">「反應管道寫在<b>工作手冊與訓練計畫</b>，而且<b>多元</b>。<b>逐級申訴</b>是：<b>導師／臨床教師 → 教育計畫主持人（范修平醫師）→ 急診醫學部部長（王宗倫醫師）→ 教學部（院方專業輔導）</b>。」</div>
+      <div class="quote">「另外還有<b>不必經過導師</b>的管道：本院<b>員工意見信箱</b>與<b>員工申訴作業辦法</b>，可書面或 email 直接向<b>人力資源室</b>提出（專線 8512-8888#21504、信箱 fjuhhr@mail.fjuh.fju.edu.tw）；院方會責成單位回覆解決。還有<b>院牧部員工關懷小組</b>提供協談輔導。」</div>
+      <div class="quote">「定期管道有：<b>每週急診教學品質會議</b>、<b>每月底導師生會談（有紀錄）</b>、以及<b>住院醫師座談會</b>；遇到問題也可以隨時聯絡師長或教學部。我這些管道<b>全部都知道</b>，之前反映的事項也都有得到回覆處理。」</div>
+    </div>
+    <div class="blk key"><div class="lab">🔑 關鍵字（管道越多越好）</div>
+      <span class="kw">逐級：導師→范修平→王宗倫→教學部</span><span class="kw">員工意見信箱</span><span class="kw">員工申訴作業辦法（人資室）</span><span class="kw">院牧部關懷小組</span><span class="kw">每週教學品質會議</span><span class="kw">每月導師生會談有紀錄</span><span class="kw">住院醫師座談會</span>
+    </div>
+    <div class="blk ng"><div class="lab">⚠ 地雷</div>
+      <ul><li>只講一個管道（例如「跟老師講」）— 拿不到「多樣化」。</li><li>說「不知道可以跟誰反映」。</li><li>導師生會談答成「沒有」或「沒紀錄」（紀錄不可寫「無」）。</li></ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================== 主治醫師篇 ===================== -->
+<section id="att-intro" data-role="att" data-group="主治醫師篇" data-title="主治醫師篇：面談重點">
+  <div class="sec-head"><span class="code att">主治醫師篇</span><h2>教師／導師會被問到的兩條</h2></div>
+  <div class="sec-sub">委員將訪談 <b>2 位教師 + 1 位導師</b>。重點在 4.3（看病流程與床邊評量 EPA/里程碑）與 5.2.2.1（你清不清楚訓練計畫內容、導師制度運作）。教師的口徑要與住院醫師、與紙本一致。</div>
+</section>
+
+<section id="att-43" data-role="att" data-group="主治醫師篇" data-title="4.3 看病流程與床邊評量（EPA/里程碑）">
+  <div class="sec-head"><span class="code att">主 4.3</span><h2>責任分層：看病流程、床邊評量（EPA／milestone）</h2><span class="pill">等級五</span></div>
+  <div class="sec-sub">委員會現場實地查證主治的審核機制，可能做床邊評量並依評量結果進行等級判定。</div>
+  <div class="card">
+    <div class="grade5">等級五標準：有規範不同層級可做的處置、<b>有床邊評量並依結果做信賴等級授權</b>；<b>每位資淺住院醫師病歷都經主治審核</b>；有訓練資深住院醫師教學與領導能力。</div>
+    <div class="blk q"><div class="lab">🅠 委員可能這樣問</div>
+      <ul>
+        <li>你們怎麼規範不同年資的住院醫師能做什麼？</li>
+        <li>你怎麼對住院醫師做床邊評量？EPA 和里程碑怎麼用？授權的依據是什麼？</li>
+        <li>資淺住院醫師的病歷你會不會核簽？你是 24 小時在急診督導嗎？</li>
+        <li>你們怎麼訓練資深住院醫師的教學與領導能力？</li>
+      </ul>
+    </div>
+    <div class="blk a"><div class="lab">🅐 標準答法</div>
+      <div class="quote"><b>分層規範：</b>「工作手冊明訂 <b>R1–R4 分層漸進</b>的臨床權限（見診間作業規範表）：R1/R2 看輕症、重症需即報告，<b>各級病歷與醫囑都要我複簽，沒複簽護理不執行</b>；R3/R4 可獨立診治但我<b>仍會全部核章、動向決定要我核簽</b>。並規範<b>交班機制</b>與看病流程（臆斷→治療→動向）。」</div>
+      <div class="quote"><b>床邊評量與授權：</b>「我用<b>台灣急診醫學里程碑（milestone）觀察工具</b>與 <b>EPA 可信賴專業活動</b>做<b>床邊評量</b>，急診輪訓月每班各完成 2 份；依觀察結果做<b>等級判定與信賴等級授權（entrustment）</b>，這也是計畫主持人做訓練成果評估、決定年資晉升的依據。我們是以<b>勝任能力導向醫學教育（CBME）</b>為原則。」</div>
+      <div class="quote"><b>病歷審核：</b>「<b>每一位資淺住院醫師（R1、R2）的病歷我都會審核核簽</b>；急診有主治 24 小時在現場督導。」</div>
+      <div class="quote"><b>資深住院醫師教學與領導：</b>「R3/R4 要<b>指導 R1/R2、PGY、實習醫學生</b>；並實際參與<b>大量傷患／災難應變演習擔任領導角色</b>；教師也接受<b>師資培育課程</b>訓練教學能力。」</div>
+    </div>
+    <div class="blk key"><div class="lab">🔑 關鍵字</div>
+      <span class="kw">R1–R4 分層漸進</span><span class="kw">里程碑觀察工具 2份/班</span><span class="kw">EPA 2份/班</span><span class="kw">信賴等級授權 entrustment</span><span class="kw">CBME</span><span class="kw">資淺病歷全部核簽</span><span class="kw">24小時主治督導</span><span class="kw">大傷演習領導</span>
+    </div>
+    <div class="blk ng"><div class="lab">⚠ 地雷</div>
+      <ul><li>把 EPA/里程碑講成「有表格但沒真的用」— 委員會抽病歷與評核表對照。</li><li>說不出授權（entrustment）與評量結果的關聯。</li><li>口徑與住院醫師版 4.3 不一致（年資權限、核簽規範要完全相同）。</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="att-5221" data-role="att" data-group="主治醫師篇" data-title="5.2.2.1 訓練計畫內容（導師責任）">
+  <div class="sec-head"><span class="code att">主 5.2.2.1</span><h2>教師／導師責任：訓練計畫內容</h2><span class="pill">等級五</span></div>
+  <div class="sec-sub">委員會請 2 位教師＋1 位導師訪談，確認你們<b>清楚訓練計畫內容</b>、有<b>導師制度</b>與<b>每月導師生會談紀錄</b>。</div>
+  <div class="card">
+    <div class="grade5">等級五標準：<b>有設立導師制度</b>；<b>每月有導師生會談紀錄</b>；<b>教師全部清楚知道訓練計畫內容</b>。（訪談教師依答對比例評分，「大部分」＝ ≥2/3。）</div>
+    <div class="blk q"><div class="lab">🅠 委員可能這樣問</div>
+      <ul>
+        <li>請簡述你們急診住院醫師訓練計畫的宗旨與目標？</li>
+        <li>訓練計畫主持人是誰？六大核心能力是哪六項？</li>
+        <li>你們有導師制度嗎？導師生會談多久一次、有沒有紀錄？</li>
+        <li>住院醫師若有情緒／壓力／成癮問題，你們怎麼發現與輔導？</li>
+      </ul>
+    </div>
+    <div class="blk a"><div class="lab">🅐 標準答法</div>
+      <div class="quote"><b>宗旨目標：</b>「本院以『<b>敬天愛人、視病猶親</b>』核心價值、秉持『真善美聖』，建構<b>全人照護</b>、以<b>病人為中心</b>，落實<b>六大核心能力</b>的急診專科訓練；遵循台灣急診醫學會的<b>CBME</b>，以『<b>台灣急診醫學里程碑</b>』與 EPA 作為訓練目標與評量。」</div>
+      <div class="quote"><b>主持人與六大核心能力：</b>「計畫主持人是<b>范修平醫師</b>（急診＋兒童急診雙專科）。六大核心能力是：<b>①病人照護 ②醫學知識 ③臨床工作中的學習與改善 ④人際關係與溝通技巧 ⑤專業素養 ⑥制度下的臨床工作</b>。」</div>
+      <div class="quote"><b>導師制度：</b>「本部<b>設有導師制度</b>，導師<b>每月辦理導師生座談會並留有紀錄</b>（每月底或四週最後週五上午），了解住院醫師工作、生活、學習困難；<b>每月最後一週還有導師口試評核</b>。導師也會在<b>每季急診醫教小組會議</b>報告。」</div>
+      <div class="quote"><b>輔導／預警機制：</b>「導師定期面談<b>早期察覺警訊</b>（情緒異常、成癮等），有疑慮通知主持人；必要時主持人知會部主任與教學部，轉介<b>院牧部關懷小組</b>（成員含主持人、部主任、導師、教學部、院牧部，必要時商請精神科），並定期追蹤。」</div>
+      <div class="quote"><b>計畫的檢討：</b>「訓練計畫經<b>急診醫教小組會議</b>通過後實施；主持人<b>每半年</b>召開訓練計畫檢討會議，教師代表、住院醫師代表、部主任都參與，評估成效並修訂。」</div>
+    </div>
+    <div class="blk key"><div class="lab">🔑 關鍵字</div>
+      <span class="kw">敬天愛人·全人照護</span><span class="kw">主持人 范修平</span><span class="kw">六大核心能力(能背出六項)</span><span class="kw">CBME·里程碑·EPA</span><span class="kw">導師制度</span><span class="kw">每月導師生會談有紀錄</span><span class="kw">急診醫教小組</span><span class="kw">每半年檢討</span><span class="kw">關懷小組</span>
+    </div>
+    <div class="blk ng"><div class="lab">⚠ 地雷</div>
+      <ul>
+        <li>六大核心能力背不齊、或講錯（這是最常被問、最容易失分的）。</li>
+        <li>導師生會談答「不定期」或「沒紀錄」（等級五要「每月有紀錄」）。</li>
+        <li>三位受訪教師/導師答案兜不攏 — 事前務必對過同一套版本。</li>
+        <li>講不出主持人是誰。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================== 附錄 ===================== -->
+<section id="apx-core" data-role="all" data-group="附錄" data-title="附錄：六大核心能力">
+  <div class="sec-head"><span class="code c">附錄</span><h2>六大核心能力（背起來）</h2></div>
+  <div class="card">
+    <table>
+      <tr><th>#</th><th>核心能力</th><th>一句話</th></tr>
+      <tr><td>1</td><td>病人照護 Patient Care</td><td>提供適當且有效的病患照顧</td></tr>
+      <tr><td>2</td><td>醫學知識 Medical Knowledge</td><td>具備並運用急診醫學知識</td></tr>
+      <tr><td>3</td><td>臨床工作中的學習與改善</td><td>自我評核、找文獻證據精進照護</td></tr>
+      <tr><td>4</td><td>人際關係與溝通技巧</td><td>與病人、家屬、醫療團隊良好溝通</td></tr>
+      <tr><td>5</td><td>專業素養 Professionalism</td><td>敬業、重視醫療責任、遵守倫理</td></tr>
+      <tr><td>6</td><td>制度下的臨床工作</td><td>熟悉並運用健康照護體系資源</td></tr>
+    </table>
+    <p style="font-size:13px;color:var(--muted)">口訣：<b>照顧、知識、改善、溝通、素養、制度</b>。</p>
+  </div>
+</section>
+
+<section id="apx-tools" data-role="all" data-group="附錄" data-title="附錄：評核工具與頻率">
+  <div class="sec-head"><span class="code c">附錄</span><h2>評核工具與頻率總表</h2></div>
+  <div class="card">
+    <table>
+      <tr><th>評核工具</th><th>頻率</th></tr>
+      <tr><td>急診里程碑觀察工具評核表（milestone）</td><td>2 份／班（急診輪訓月）</td></tr>
+      <tr><td>可信任專業活動 EPAs 評核</td><td>2 份／班（急診輪訓月）</td></tr>
+      <tr><td>急診會診教學記錄表</td><td>1 份／月</td></tr>
+      <tr><td>Mini-CEX 迷你臨床評核</td><td>1 份／月</td></tr>
+      <tr><td>DOPS 直接操作觀察評核</td><td>1 份／月</td></tr>
+      <tr><td>急診病歷書寫評核表</td><td>2 份／月</td></tr>
+      <tr><td>外訓科學習紀錄與評核</td><td>1 份／月（非急診輪訓月）</td></tr>
+      <tr><td>學習歷程檔案 Portfolio</td><td>1 次／月</td></tr>
+      <tr><td>醫師六大核心能力考核表</td><td>1 次／半年</td></tr>
+      <tr><td>年度晉升會考（筆試）</td><td>1 次／年</td></tr>
+      <tr><td>年度晉升會考（口試／技術考）</td><td>1 次／年</td></tr>
+      <tr><td>導師口試評核（ACLS/ATLS/EMS＋教學會議＋核心課程）</td><td>每月最後一週</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="apx-appeal" data-role="all" data-group="附錄" data-title="附錄：反應/申訴管道全圖">
+  <div class="sec-head"><span class="code c">附錄</span><h2>反應／申訴管道全圖</h2></div>
+  <div class="card">
+    <div class="callout info"><h4>逐級申訴</h4>
+      <p style="font-size:16px;text-align:center;font-weight:600">導師／臨床教師 → 教育計畫主持人（范修平）→ 急診醫學部部長（王宗倫）→ 教學部（院方專業輔導）</p>
+    </div>
+    <table>
+      <tr><th>管道</th><th>說明</th></tr>
+      <tr><td>員工意見信箱／員工申訴作業辦法</td><td>可書面或 email 直接向人力資源室提出；專線 8512-8888#21504、信箱 fjuhhr@mail.fjuh.fju.edu.tw</td></tr>
+      <tr><td>院牧部 員工關懷小組</td><td>關懷師、院牧部督導及相關主管；提供協談輔導、每月教學品質會議評估警訊</td></tr>
+      <tr><td>每週 急診教學品質會議</td><td>定期反映教學與臨床事項</td></tr>
+      <tr><td>每月底 導師生會談</td><td>有紀錄，輔導與意見反應處理</td></tr>
+      <tr><td>住院醫師座談會</td><td>定期舉行、認真處理反應事項</td></tr>
+      <tr><td>隨時</td><td>可直接聯絡師長或教學部</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="apx-checklist" data-role="all" data-group="附錄" data-title="附錄：訪查當天自我檢查表">
+  <div class="sec-head"><span class="code c">附錄</span><h2>訪查當天 · 個人自我檢查表</h2></div>
+  <div class="card">
+    <div class="blk a"><div class="lab">住院醫師出發前確認</div>
+      <ul>
+        <li>☐ 我能說出工作手冊版本（114.05.23）與裡面有什麼、我有記錄學習歷程的義務</li>
+        <li>☐ 我能講出每班 12h、每月 16 班、160–200 小時、假日 1/3、有年休且按比例折抵</li>
+        <li>☐ 我能講出自己這一級的看病權限，以及 CT／侵入性／動向一律主治核簽</li>
+        <li>☐ 我能一口氣列出 ≥3 個反應管道（含不經導師的管道）</li>
+        <li>☐ 我能背出六大核心能力六項</li>
+      </ul>
+    </div>
+    <div class="blk a"><div class="lab">主治醫師（教師／導師）出發前確認</div>
+      <ul>
+        <li>☐ 我能說明 R1–R4 分層權限、資淺病歷全部核簽</li>
+        <li>☐ 我能說明 EPA／里程碑床邊評量 → 信賴等級授權（CBME）</li>
+        <li>☐ 我能講出訓練計畫宗旨、主持人（范修平）、六大核心能力</li>
+        <li>☐ 我能說明導師制度：每月導師生會談有紀錄、每季醫教小組、每半年檢討</li>
+        <li>☐ 我（三位受訪者）已對過同一套版本，口徑一致</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+    </div>
+    <div class="noresult" id="noresult">找不到符合「<span id="nrq"></span>」的內容，請換個關鍵字。</div>
+    <footer>
+      本手冊依據《急診醫學專科醫師訓練計畫訪視認定評核表－評量方法 114.04.30 版》、輔大醫院急診醫學部工作手冊（114.05.23 第五次修訂）、急診專科醫師訓練計畫書、及 RRC 資料準備工作分配表彙整製作，供院內備詢演練使用。<br>
+      標準答法均對應各條文「等級五」標準；實際回答請以本院最新紙本文件與現場紀錄為準，務求「說得出、找得到、對得上」。
+    </footer>
+  </main>
+</div>
+<script>
+(function(){
+  const sections=[...document.querySelectorAll('section')];
+  const nav=document.getElementById('nav');
+  const search=document.getElementById('search');
+  const noresult=document.getElementById('noresult');
+  const content=document.getElementById('content');
+  let curRole='all';
+
+  // ---- Build sidebar from sections ----
+  const groups=[];
+  sections.forEach(s=>{
+    const g=s.dataset.group||'其他';
+    let grp=groups.find(x=>x.name===g);
+    if(!grp){grp={name:g,items:[]};groups.push(grp);}
+    grp.items.push(s);
+  });
+  const dotFor=r=>r==='res'?'r':r==='att'?'a':'c';
+  groups.forEach(grp=>{
+    const h=document.createElement('div');h.className='grp';h.textContent=grp.name;h.dataset.grp=grp.name;nav.appendChild(h);
+    grp.items.forEach(s=>{
+      const a=document.createElement('a');
+      a.href='#'+s.id;a.dataset.target=s.id;a.dataset.role=s.dataset.role;
+      const code=s.querySelector('.code');
+      const label=s.dataset.title||(s.querySelector('h2')?.textContent||s.id);
+      a.innerHTML='<span class="dot '+dotFor(s.dataset.role)+'"></span> '+label;
+      nav.appendChild(a);
+    });
+  });
+  const navLinks=[...nav.querySelectorAll('a')];
+  const navGroups=[...nav.querySelectorAll('.grp')];
+
+  // ---- Role tabs ----
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+      t.classList.add('on');curRole=t.dataset.role;applyFilters();
+    });
+  });
+
+  // ---- Search + role filtering ----
+  function clearMarks(){content.querySelectorAll('mark').forEach(m=>{const p=m.parentNode;p.replaceChild(document.createTextNode(m.textContent),m);p.normalize();});}
+  function highlight(root,q){
+    if(!q)return;
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{
+      if(!n.nodeValue.trim())return NodeFilter.FILTER_REJECT;
+      const p=n.parentNode.nodeName;
+      if(p==='SCRIPT'||p==='STYLE'||p==='MARK')return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }});
+    const targets=[];let n;const ql=q.toLowerCase();
+    while(n=walker.nextNode()){if(n.nodeValue.toLowerCase().includes(ql))targets.push(n);}
+    targets.forEach(node=>{
+      const frag=document.createDocumentFragment();const txt=node.nodeValue;let i=0,idx;
+      const low=txt.toLowerCase();
+      while((idx=low.indexOf(ql,i))!==-1){
+        frag.appendChild(document.createTextNode(txt.slice(i,idx)));
+        const m=document.createElement('mark');m.textContent=txt.slice(idx,idx+q.length);frag.appendChild(m);
+        i=idx+q.length;
+      }
+      frag.appendChild(document.createTextNode(txt.slice(i)));
+      node.parentNode.replaceChild(frag,node);
+    });
+  }
+  function applyFilters(){
+    const q=search.value.trim();const ql=q.toLowerCase();
+    clearMarks();
+    let anyVisible=false;
+    sections.forEach(s=>{
+      const roleOk=(curRole==='all'||s.dataset.role==='all'||s.dataset.role===curRole);
+      const textOk=!ql||s.textContent.toLowerCase().includes(ql)||(s.dataset.title||'').toLowerCase().includes(ql);
+      const show=roleOk&&textOk;
+      s.classList.toggle('hidden',!show);
+      if(show)anyVisible=true;
+    });
+    if(ql)highlight(content,q);
+    // nav links
+    navLinks.forEach(a=>{
+      const s=document.getElementById(a.dataset.target);
+      a.classList.toggle('hidden',s.classList.contains('hidden'));
+    });
+    navGroups.forEach(g=>{
+      const items=navLinks.filter(a=>a.previousElementSibling&&true); // fallback
+    });
+    // hide empty groups
+    navGroups.forEach(g=>{
+      let sib=g.nextElementSibling,hasVisible=false;
+      while(sib&&!sib.classList.contains('grp')){
+        if(sib.tagName==='A'&&!sib.classList.contains('hidden'))hasVisible=true;
+        sib=sib.nextElementSibling;
+      }
+      g.classList.toggle('hidden',!hasVisible);
+    });
+    noresult.style.display=anyVisible?'none':'block';
+    document.getElementById('nrq').textContent=q;
+  }
+  let deb;search.addEventListener('input',()=>{clearTimeout(deb);deb=setTimeout(applyFilters,120);});
+  search.addEventListener('keydown',e=>{if(e.key==='Escape'){search.value='';applyFilters();}});
+
+  // ---- Scrollspy ----
+  const spy=new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        navLinks.forEach(a=>a.classList.toggle('active',a.dataset.target===en.target.id));
+      }
+    });
+  },{rootMargin:'-20% 0px -70% 0px'});
+  sections.forEach(s=>spy.observe(s));
+
+  // smooth nav click keeps active
+  navLinks.forEach(a=>a.addEventListener('click',()=>{navLinks.forEach(x=>x.classList.remove('active'));a.classList.add('active');}));
+})();
+</script>
+</body>
+</html>
